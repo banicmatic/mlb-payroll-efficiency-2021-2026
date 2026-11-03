@@ -57,13 +57,6 @@ These findings suggest that increases in spending alone are not strongly associa
 - [x] Section 1: Payroll vs. Wins and Losses
 - [x] Section 2: Changes in Payroll vs. Changes in Performance
 
-### Planned
-- [ ] Regression modelling
-- [ ] Model diagnostics and validation
-- [ ] Payroll efficiency comparisons
-- [ ] Milwaukee Brewers case study
-- [ ] Final discussion and conclusions
-
 ## Tools and Technologies
 
 - **R** — Statistical analysis
