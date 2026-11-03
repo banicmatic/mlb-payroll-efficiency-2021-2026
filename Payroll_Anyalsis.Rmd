@@ -1,0 +1,242 @@
+---
+title: Does Money Buy Wins? An Analysis of Payroll Efficiency in Major League Baseball
+  (2021–2026)
+author: "Borna Anic-Matic"
+date: "2026-10-30"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+As the 2026 MLB season comes to an end, with the Milwaukee Brewers crowned World Series champions for the first time in franchise history, discussions surrounding a potential lockout and the introduction of salary caps and floors have raised an important question: **To what extent does a team's payroll predict its success?**
+
+This project aims to investigate the relationship between team payroll and regular-season success in Major League Baseball from 2021 to 2026, examining whether payroll can serve as a reliable predictor of a team's performance.
+
+```{r}
+install.packages('baseballr')
+install.packages("rvest")
+install.packages("readxl")
+
+```
+```{r}
+library(baseballr)
+library(tidyverse)
+library(dplyr)
+library(readxl)
+
+
+
+```
+
+```{r}
+
+# Create an empty list to store standings
+standings_list <- list()
+
+# Loop through each year
+for (year in 2021:2026) {
+
+  # Retrieve American League standings
+  AL <- mlb_standings(
+    season = year,
+    league_id = 103
+  )
+
+  # Retrieve National League standings
+  NL <- mlb_standings(
+    season = year,
+    league_id = 104
+  )
+
+  # Combine both leagues
+  season_standings <- bind_rows(AL, NL)
+
+  # Add the year as a variable
+  season_standings$year <- year
+
+  # Store the results
+  standings_list[[as.character(year)]] <- season_standings
+}
+
+# Combine all seasons into one dataframe
+mlb_standings_all <- bind_rows(standings_list)
+```
+
+
+```{r}
+excel_sheets("MLB Salaries.xlsx")
+
+payroll_data <- bind_rows(
+  lapply(2021:2026, function(year) {
+    read_excel(
+      "MLB Salaries.xlsx",
+      sheet = as.character(year)
+    )
+  })
+)
+```
+```{r}
+#View(payroll_data)
+
+dim(payroll_data)
+
+names(payroll_data)
+```
+
+```{r}
+mlb_payroll <- payroll_data %>% 
+               mutate(`difference in payroll` = `team payroll` - `last year payroll`)  %>%
+               select(year, team, `team payroll`, w, l, `last year payroll`, `difference in payroll`) 
+
+mlb_payroll
+
+```
+```{r}
+summary(mlb_payroll)
+```
+
+## Examining the Relationship Between Team Payroll and Regular-Season Performance (2021–2026)
+
+To begin the anyalsis, we will be comparing a teams payroll for a given year versue the amount of wins and losses they obtained. To do this we will first graph the data agaisnt each other and then we will calculate correaltion tests to quantify what the graphs are showing.
+```{r}
+# Payroll vs Wins
+ggplot(mlb_payroll, aes(x = `team payroll`, y = w)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      prefix = "$",
+      suffix = "M"
+    )
+  ) +
+  labs(
+    title = "Team Payroll vs Regular-Season Wins (2021–2026)",
+    x = "Team Payroll",
+    y = "Wins"
+  )
+
+# Payroll vs Losses
+ggplot(mlb_payroll, aes(x = `team payroll`, y = l)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      prefix = "$",
+      suffix = "M"
+    )
+  ) +
+  labs(
+    title = "Team Payroll vs Regular-Season Losses (2021–2026)",
+    x = "Team Payroll",
+    y = "Losses"
+  )
+```
+```{r}
+cor_win_payroll <- cor(mlb_payroll$w,mlb_payroll$`team payroll`)
+cor_loss_payroll <- cor(mlb_payroll$l,mlb_payroll$`team payroll`)
+
+rsqu_win_payroll <- cor(mlb_payroll$w,mlb_payroll$`team payroll`)^2
+rsqu_loss_payroll <- cor(mlb_payroll$l,mlb_payroll$`team payroll`)^2
+
+cor_win_payroll
+cor_loss_payroll
+rsqu_win_payroll
+rsqu_loss_payroll
+```
+
+The relationship between team payroll and wins appears to be positively correlated, although the strength of this relationship is relatively weak to moderate. An R-squared value of 0.1167 indicates that approximately 11.67% of the variation in a team's wins can be explained by its payroll.
+
+Conversely, the relationship between team payroll and losses is negative, with a similarly weak to moderate correlation. An R-squared value of 0.1177 indicates that approximately 11.77% of the variation in a team's losses can be explained by its payroll.
+
+Overall, these findings suggest that team payroll alone is a relatively weak predictor of regular-season performance. While higher payrolls are generally associated with more wins and fewer losses, a substantial proportion of the variation in team performance remains unexplained by payroll alone.
+
+## Examining the Relationship Between Year-Over-Year Changes in Team Payroll and Regular-Season Performance (2021–2026)
+
+```{r}
+payroll_data_2 <- payroll_data %>% group_by(team) %>%
+                  arrange(year, .by_group = TRUE) %>%
+                  mutate(wins_change = w - lag(w)) %>%
+                  ungroup()
+
+payroll_data_2 <- payroll_data_2 %>% group_by(team) %>%
+                  arrange(year, .by_group = TRUE) %>%
+                  mutate(losses_change = l - lag(l)) %>%
+                  ungroup()
+
+payroll_data_2 <- payroll_data_2 %>% group_by(team) %>%
+                  arrange(year, .by_group = TRUE) %>%
+                  mutate(payroll_change = `team payroll` - lag(`team payroll`)) %>%
+                  ungroup()
+```
+
+```{r}
+payroll_data_2 <- payroll_data_2 %>%
+  tidyr::drop_na(wins_change, losses_change, payroll_change)
+```
+
+```{r}
+avg_win_change <-mean(payroll_data_2$wins_change)
+avg_win_change
+
+avg_loss_change <- mean(payroll_data_2$losses_change)
+avg_loss_change
+
+avg_payroll_change <- mean(payroll_data_2$payroll_change)
+avg_payroll_change
+```
+
+```{r}
+# Change in Payroll vs Change in Wins
+ggplot(payroll_data_2, aes(x = payroll_change, y = wins_change)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      prefix = "$",
+      suffix = "M"
+    )
+  ) +
+  labs(
+    title = "Team Payroll Change vs Regular-Season Wins Change",
+    x = "Team Payroll Change",
+    y = "Wins Change"
+  )
+
+ggplot(payroll_data_2, aes(x = payroll_change, y = losses_change)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_x_continuous(
+    labels = scales::label_number(
+      scale = 1e-6,
+      prefix = "$",
+      suffix = "M"
+    )
+  ) +
+  labs(
+    title = "Team Payroll Change vs Regular-Season Losses Change",
+    x = "Team Payroll Change",
+    y = "Losses Change"
+  )
+```
+```{r}
+cor_winschange_payrollchange <- cor(payroll_data_2$wins_change, payroll_data_2$payroll_change)
+cor_losseschange_payrollchange <-cor(payroll_data_2$losses_change, payroll_data_2$payroll_change)
+
+cor_winschange_payrollchange
+cor_losseschange_payrollchange
+
+cor_winschange_payrollchange^2
+cor_losseschange_payrollchange^2
+```
+The relationship between year-over-year changes in team payroll and changes in regular-season performance appears to be extremely weak.
+
+The correlation between changes in payroll and wins was -0.0759, indicating a very weak negative relationship. An R-squared value of 0.00576 suggests that approximately 0.58% of the variation in year-over-year changes in wins can be explained by changes in team payroll.
+
+Conversely, the correlation between changes in payroll and losses was 0.0781, indicating a very weak positive relationship. The corresponding R-squared value of 0.00611 indicates that approximately 0.61% of the variation in changes in losses can be explained by changes in payroll.
+
+Overall, these findings suggest that increases or decreases in team payroll have little linear association with improvements or declines in regular-season performance. While changes in spending may influence individual teams, the results indicate that payroll changes alone are not reliable predictors of year-over-year changes in wins or losses across Major League Baseball.
+
+
