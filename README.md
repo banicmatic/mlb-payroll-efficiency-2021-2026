@@ -156,12 +156,12 @@ These findings suggest that financial efficiency varies considerably among MLB o
 
 ### Completed
 
-- [x] Data collection and preparation
-- [x] Section 1: Payroll vs. Regular-Season Performance
-- [x] Section 2: Year-Over-Year Payroll and Performance Changes
-- [x] Section 3: Development and Application of Payroll Efficiency Index
-- [x] Annual and Six-Year Efficiency Rankings
-- [x] Initial Research Report
+-  Data collection and preparation
+-  Section 1: Payroll vs. Regular-Season Performance
+-  Section 2: Year-Over-Year Payroll and Performance Changes
+-  Section 3: Development and Application of Payroll Efficiency Index
+-  Annual and Six-Year Efficiency Rankings
+-  Initial Research Report
 
 ### Upcoming
 
