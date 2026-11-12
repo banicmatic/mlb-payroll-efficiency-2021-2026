@@ -1,54 +1,110 @@
 
 # Does Money Buy Wins?
-### Payroll Efficiency, Competitive Performance, and Financial Inequality in Major League Baseball (2021–2026)
-
-**Independent Sports Analytics Project | R | 2026**
+### Payroll Efficiency and Competitive Performance in Major League Baseball (2021–2026)
 
 ## Overview
 
 Does spending more money lead to more wins in Major League Baseball?
 
-This independent research project examines the relationship between MLB team payroll and regular-season performance from 2021 to 2026. Using data from all 30 MLB organizations, the analysis investigates whether higher spending translates into greater competitive success, identifies organizations achieving strong results relative to their financial resources, and explores the economic implications of salary caps and payroll floors.
+This independent sports analytics project examines the relationship between team payroll expenditure and regular-season performance across all 30 MLB organizations from 2021 to 2026.
 
-The project extends beyond correlation analysis by developing a payroll efficiency index, testing its robustness, and simulating alternative leaguewide spending structures.
+Using 180 team-season observations, I investigate whether financial expenditure predicts competitive success, develop a payroll efficiency index, and simulate how alternative salary cap-and-floor structures could affect financial inequality.
 
-## Methods & Tools
+**[Read the Full Research Report](Does_Money_Buy_Wins.pdf)**
+
+## Tools & Methods
 
 **Language:** R  
-**Libraries:** `dplyr`, `tidyr`, `ggplot2`, `readxl`, `knitr`, `kableExtra`, `ineq`
+**Libraries:** tidyverse, dplyr, ggplot2, knitr, kableExtra  
+**Reporting:** R Markdown, LaTeX, PDF
 
-**Statistical techniques:**
+Statistical methods include:
 - Pearson correlation and simple linear regression
-- Year-over-year payroll and performance analysis
-- Development of a payroll efficiency index
-- Sensitivity analysis and Spearman's rank correlation
-- Salary cap and payroll floor scenario modelling
-- Gini coefficient analysis of payroll inequality
+- Year-over-year payroll and performance comparisons
+- Development of a custom payroll efficiency index
+- Sensitivity analysis and Spearman rank correlation
+- Salary cap-and-floor simulations
+- Gini coefficient analysis
+- Comparative organizational case studies
 
 ## Key Findings
 
-- **Payroll and Wins:** Team payroll explained approximately **11.68%** of the variation in regular-season wins in a simple linear model.
-- **Changes in Spending:** Year-over-year payroll changes exhibited very weak linear relationships with changes in team performance.
-- **Payroll Efficiency:** The Tampa Bay Rays and Milwaukee Brewers ranked first and second in average payroll efficiency across the six-season period.
-- **Methodological Robustness:** Alternative aggregation methods produced highly similar organizational rankings, with Spearman's rank correlation of **0.9938**.
-- **Salary Regulations:** Applying MLB's reported November 2026 salary cap-and-floor thresholds produced an illustrative **$263.72 million net increase** in leaguewide payroll and reduced the simulated Gini coefficient from **0.2360 to 0.0846**.
+### 1. Payroll Has Limited Predictive Power
+
+Across 180 team-season observations, payroll exhibited a positive correlation with regular-season victories:
+
+- **Pearson's r:** 0.3417
+- **R²:** 0.1168
+
+Payroll explained approximately 11.7% of the variation in regular-season wins under a simple linear regression model.
+
+### 2. Increased Spending Does Not Guarantee Improvement
+
+Year-over-year payroll changes showed virtually no linear relationship with changes in victories:
+
+- **Pearson's r:** -0.0778
+- **R²:** 0.0061
+
+Changes in payroll explained approximately 0.61% of the variation in changes in wins.
+
+### 3. Payroll Efficiency Varies Across Organizations
+
+I developed a payroll efficiency index measuring victories above the leaguewide average per $1 million in payroll.
+
+The highest-ranked organizations across 2021–2026 were:
+
+| Rank | Organization | Average Efficiency |
+|------|--------------|-------------------:|
+| 1 | Tampa Bay Rays | 0.1220 |
+| 2 | Milwaukee Brewers | 0.1180 |
+| 3 | Los Angeles Dodgers | 0.0756 |
+
+Sensitivity analyses demonstrated that rankings were more sensitive to the selected win benchmark than to the method used to aggregate annual efficiency.
+
+### 4. Payroll Inequality Can Be Reduced Without Guaranteeing Competitive Balance
+
+Three hypothetical salary cap-and-floor scenarios were applied to 2026 payroll data.
+
+The original payroll Gini coefficient of **0.2360** declined to:
+
+- **0.0846** under Scenario A
+- **0.0676** under Scenario B
+- **0.1823** under Scenario C
+
+These simulations measure changes in payroll distribution, not predicted changes in team victories.
+
+### 5. Similar Spending Does Not Guarantee Similar Outcomes
+
+Comparative case studies examined the Milwaukee Brewers, Tampa Bay Rays, Los Angeles Dodgers, and New York Mets.
+
+The Dodgers and Mets maintained similarly substantial payrolls but achieved markedly different competitive outcomes. Meanwhile, the Brewers and Rays demonstrated strong payroll-adjusted performance with considerably smaller financial commitments.
 
 ## Limitations
 
-The analysis identifies statistical associations rather than causal relationships. The payroll efficiency index is sensitive to the selected performance baseline, and the financial simulations assume immediate compliance with the spending restrictions. The dataset's payroll accounting may also differ from MLB's Competitive Balance Tax methodology.
+The analysis is descriptive and does not establish causation. Results depend on payroll definitions, the selected efficiency benchmark, and the 2021–2026 observation period.
+
+Salary cap-and-floor simulations assume immediate compliance and do not model roster changes, contract obligations, or future competitive outcomes.
 
 ## Repository Contents
 
-- `PayrollAnalysisBaseball.Rmd` — R Markdown source code and analysis
-- `PayrollAnalysisBaseball.pdf` — Full research report
-- `MLB Salaries.xlsx` — Dataset used for the analysis
+- `Does_Money_Buy_Wins.pdf` — Complete research report
+- `MLB_Payroll_Analysis.Rmd` — R Markdown source code
+- `data/MLB_Salaries.xlsx` — Dataset used in the analysis, if redistribution is permitted
 
-## Project Status
+## Data Sources
 
-**Work in Progress — Sections 1–5 Completed**
+- The Baseball Cube — MLB payroll data
+- MLB regular-season standings data
+- Major League Baseball — November 2026 salary cap-and-floor proposal
 
-Upcoming work includes comparative organizational case studies of the Milwaukee Brewers, Tampa Bay Rays, Los Angeles Dodgers, and New York Mets, followed by the final discussion and conclusions.
+## Conclusion
+
+Financial expenditure is positively associated with regular-season success, but payroll alone explains a relatively small proportion of performance variation.
+
+**Money may provide opportunities to win, but spending alone does not guarantee success.**
 
 ---
 
-*An independent research project exploring the intersection of baseball analytics, statistical methodology, and sports economics.*
+**Author:** Borna Anic-Matic  
+**Project Type:** Independent Sports Analytics Research  
+**Period Analyzed:** 2021–2026
