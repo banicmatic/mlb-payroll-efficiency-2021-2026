@@ -10,7 +10,7 @@ This independent sports analytics project examines the relationship between team
 
 Using 180 team-season observations, I investigate whether financial expenditure predicts competitive success, develop a payroll efficiency index, and simulate how alternative salary cap-and-floor structures could affect financial inequality.
 
-**[Read the Full Research Report](Does_Money_Buy_Wins.pdf)**
+**[Read the Full Research Report](Does Money Buy Wins Payroll Efficiency and CompetitivePerformance in Major League Baseball (2021–2026).pdf)**
 
 ## Tools & Methods
 
